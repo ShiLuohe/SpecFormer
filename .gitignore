@@ -168,3 +168,4 @@ camerard/
 trace_all.json
 trace.json
 profiler.py
+training/dummy*
