@@ -1,5 +1,7 @@
 
 import os
+import yaml
+import argparse
 from tqdm import tqdm
 from time import time
 import math
@@ -75,22 +77,29 @@ class KLDivWithMasking():
 
 def main():
 
-    version_name = "reb-cau"
+    def load_config(config_path):
+        with open(config_path, "r") as f:
+            return yaml.safe_load(f)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=str, required=True)
+    args = parser.parse_args()
 
-    rnd_seed = 14336
+    cfg = load_config(args.config)
+
+    # ================== assign variables ==================
+
+    version_name = cfg["version_name"]
+
+    rnd_seed = cfg["rnd_seed"]
     torch.manual_seed(rnd_seed)
-    device_id = "cuda"
+
+    device_id = cfg["device_id"]
     device = torch.device(device_id)
 
-    # version_name = "may10th-2"
-    # model_name = "Llama-3.2-3B"
-    # bos_token_id = 128000
+    model_name = cfg["model_name"]
+    bos_token_id = cfg["bos_token_id"]
 
-    # version_name = "may10th-1"
-    model_name = "Qwen3-4B"
-    bos_token_id = 151644
-
-    do_distillation = False
+    do_distillation = cfg["do_distillation"]
 
     model_path = f"/data/shilh/model/{model_name}/"
     log_path = f"./logs/{version_name}"
@@ -99,23 +108,24 @@ def main():
     if not os.path.exists(temp_path):
         os.makedirs(temp_path)
 
-    max_ahead = 8
-    hook_list = [0, 17, -2, -1]
+    max_ahead = cfg["max_ahead"]
+    hook_list = cfg["hook_list"]
 
-    train_bs = 1
-    valid_bs = 1
-    test_size = 0.01
-    num_epochs = 2
+    train_bs = cfg["train_bs"]
+    valid_bs = cfg["valid_bs"]
+    test_size = cfg["test_size"]
+    num_epochs = cfg["num_epochs"]
 
-    lr_max = 5e-4
-    lr_min = 1e-5
-    adam_eps = 1e-2
+    lr_max = cfg["lr_max"]
+    lr_min = cfg["lr_min"]
+    adam_eps = cfg["adam_eps"]
 
-    warm_up_ratio = 0.05
-    grad_acc_steps = 64
-    log_steps = 16
-    save_steps = 100000
-    saved = 0
+    warm_up_ratio = cfg["warm_up_ratio"]
+    grad_acc_steps = cfg["grad_acc_steps"]
+    log_steps = cfg["log_steps"]
+    save_steps = cfg["save_steps"]
+    saved = cfg["saved"]
+    # ===========================================================
 
     loss_func = nn.CrossEntropyLoss()
 

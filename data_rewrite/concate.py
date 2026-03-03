@@ -1,8 +1,18 @@
+import argparse
+
 from datasets import load_dataset, concatenate_datasets
 
 def main():
 
-    name = "Llama-3.2-3B"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, required=True)
+    parser.add_argument("--model_path", type=str, required=True)
+
+    args = parser.parse_args()
+
+    name = args.model_name
+    model_path = args.model_path
+
 
     train_ds_1 = load_dataset(
         "parquet", 

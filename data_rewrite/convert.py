@@ -1,5 +1,6 @@
 
 import os
+import argparse
 
 from datasets import load_dataset, DatasetDict
 
@@ -98,5 +99,14 @@ if __name__ == "__main__":
         "data_rewrite/raw-parquet/test_sft-00000-of-00001-f7dfac4afe5b93f4.parquet",
     ]
 
-    main("Llama-3.2-3B", "/data/shilh/model/Llama-3.2-3B-Instruct/", train_path_2, test_path_2, 2)
-    main("Llama-3.2-3B", "/data/shilh/model/Llama-3.2-3B-Instruct/", train_path_1, test_path_1, 1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, required=True)
+    parser.add_argument("--model_path", type=str, required=True)
+
+    args = parser.parse_args()
+
+    model_name = args.model_name
+    model_path = args.model_path
+
+    main(model_name, model_path, train_path_2, test_path_2, 2)
+    main(model_name, model_path, train_path_1, test_path_1, 1)

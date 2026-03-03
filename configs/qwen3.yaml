@@ -1,0 +1,27 @@
+version_name: "reb-cau"
+
+rnd_seed: 14336
+device_id: "cuda"
+
+model_name: "Qwen3-4B"
+bos_token_id: 151644
+
+do_distillation: false
+
+max_ahead: 8
+hook_list: [0, 17, -2, -1]
+
+train_bs: 1
+valid_bs: 1
+test_size: 0.01
+num_epochs: 2
+
+lr_max: 5e-4
+lr_min: 1e-5
+adam_eps: 1e-2
+
+warm_up_ratio: 0.05
+grad_acc_steps: 64
+log_steps: 16
+save_steps: 100000
+saved: 0
